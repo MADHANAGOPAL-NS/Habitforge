@@ -4,14 +4,12 @@ const express = require('express');
 
 const cors = require("cors");
 
-const dotenv = require("dotenv");
-
 const connect_DB = require("./Config/db");
 
 const auth_routes = require("./Routes/authRoutes");
 
-
-//stroing all the functionalities in the app variable...
+const habit_routes = require("./Routes/habitRoutes");
+//storing all the functionalities in the app variable...
 const app = express();
 
 //calling the function from another file
@@ -27,6 +25,10 @@ app.use(express.json());
 //Routing from authRoutes.js
 
 app.use("/api/auth", auth_routes);
+
+//Routing from habitRoutes.js
+
+app.use("/api/habits", habit_routes);
 
 app.get("/", (req, res) =>{
     res.send("Habitforge API is running");
