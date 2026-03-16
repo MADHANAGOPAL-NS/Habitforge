@@ -4,17 +4,25 @@ const express = require('express');
 
 const router = express.Router();
 
-const {create_habit, get_habits} = require("../Controllers/habitController");
+const {create_habit, get_habits, update_habit, delete_habit} = require("../Controllers/habitController");
 
 //to process the request and give back the response...and only logged in user can create habits
 const middleware = require("../Middleware/authMiddleware");
 
-//create habit API 
+//routing for create habit API 
 
 router.post("/", middleware, create_habit);
 
-//get habit API
+//routing for get habit API
 
 router.get("/", middleware, get_habits);
+
+//routing for update habit API
+
+router.put("/:id", middleware, update_habit);
+
+//routing for delete habit API
+
+router.delete("/:id", middleware, delete_habit);
 
 module.exports = router;
