@@ -1,5 +1,7 @@
 //this file contains the API for habit creation and get the habits API...
 const Habit = require("../Models/Habit");
+
+const Habit_log = require("../Models/HabitLog");
 //API code for habit creation
 const create_habit = async (req, res) => {
     try{
@@ -87,4 +89,73 @@ const delete_habit = async(req, res) => {
     }
 }
 
-module.exports = {create_habit, get_habits, update_habit, delete_habit};
+//API code for habit completion...
+
+const complete_habit = async(req, res) => {
+    try{
+        const userId = req.user.id;
+
+        const habitId = req.params.id;
+
+        //converting the time to 12 Hours format 00:00 
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+
+        //for checking dupliacte log below is the logic..we dont see the time we see the range of the time...
+
+        const already_completed = await Habit_log.findOne({
+            habitId,
+            userId,
+            //we are checking whether the date range is within today 12 hrs and tmrw 12 hrs...
+            completedDate: {
+                $gte: today,
+                $lt: tomorrow
+            }
+
+        });
+
+        if(already_completed){
+            return res.status(404).json({message: "Habit already completed for today"});
+        }
+
+        //create log...
+        const new_log = new Habit_log({
+            habitId,
+            userId,
+            completedDate: today
+        });
+
+        await new_log.save();
+
+        res.status(201).json({message: "Habit marked as completed", log: new_log});
+    }
+    catch(error){
+        res.status(500).json({message: error.message});
+    }
+};
+
+//API for getting the logs stored in DB...
+
+const get_logs  = async (req, res) => {
+    try{
+        const userId = req.user.id;
+
+        const habitId = req.params.id;
+
+        const logs = await Habit_log.find({
+            habitId,
+            userId
+        }).sort({completedDate: -1});
+
+        res.status(200).json(logs);
+    }
+
+    catch(error){
+        res.status(500).json({message: error.message});
+    }
+};
+module.exports = {create_habit, get_habits, update_habit, delete_habit, complete_habit, get_logs};
