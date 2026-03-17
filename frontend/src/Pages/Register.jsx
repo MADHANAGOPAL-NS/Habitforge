@@ -7,6 +7,7 @@ import { FaFire } from "react-icons/fa";
 import { FaCalendarAlt } from "react-icons/fa";
 import { FaChartLine } from "react-icons/fa";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 
 const quotes = ["Start small. Stay consistent",
@@ -57,9 +58,18 @@ function Register(){
                 name, email, password
             });
             
-
-            navigate("/login");
-
+            //alert message for successfull registration
+            Swal.fire({
+                title: "Welcome to HabitForge",
+                text: "Your account has been created successfully!",
+                icon: "success",
+                confirmButtonText: "Continue for login",
+                background: "#111633",
+                color: "#fff",
+                confirmButtonColor: "#7c3aed"
+            }).then(() => {
+                navigate("/login");
+            });
         }
 
         catch(error){
