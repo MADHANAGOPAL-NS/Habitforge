@@ -22,7 +22,7 @@ const user_schema = new mongoose.Schema({
 
     xp: {
         type: Number,
-        default: 1
+        default: 0
     },
 
     level: {

@@ -2,6 +2,24 @@
 const Habit = require("../Models/Habit");
 
 const Habit_log = require("../Models/HabitLog");
+
+//importing the streak calculation function...
+
+const streak_calculation = require("../utils/streak");
+
+//importing user model
+
+const User = require("../Models/User");
+
+//importing xp logic file
+const calculateXP = require("../utils/xp");
+
+//importing level logic file...
+const calculateLevel = require("../utils/level");
+
+//importing badges logic file...
+const checkBadges = require("../utils/badges");
+
 //API code for habit creation
 const create_habit = async (req, res) => {
     try{
@@ -131,7 +149,40 @@ const complete_habit = async(req, res) => {
 
         await new_log.save();
 
-        res.status(201).json({message: "Habit marked as completed", log: new_log});
+        const logs = await Habit_log.find({userId, habitId});
+
+        //calculate streak
+
+        const streak = streak_calculation(logs);
+
+        //get user
+
+        const user = await User.findById(userId);
+
+        //calculate XP
+
+        const xp_gained = calculateXP(streak);
+        user.xp += xp_gained;
+
+        //calculate level
+
+        user.level = calculateLevel(user.xp);
+
+        //check badges
+
+        const newBadges = checkBadges(user, streak);
+        user.badges.push(...newBadges);
+
+        //save user
+
+        await user.save();
+
+        res.status(201).json({message: "Habit marked as completed", log: new_log,
+            streak,
+            xp: user.xp,
+            level: user.level,
+            badges: user.badges
+        });
     }
     catch(error){
         res.status(500).json({message: error.message});
@@ -149,9 +200,16 @@ const get_logs  = async (req, res) => {
         const logs = await Habit_log.find({
             habitId,
             userId
-        }).sort({completedDate: -1});
+        });
 
-        res.status(200).json(logs);
+        //calculate streak
+
+        const streak = streak_calculation(logs);
+
+        res.status(200).json({
+            logs,
+            streak
+        });
     }
 
     catch(error){
