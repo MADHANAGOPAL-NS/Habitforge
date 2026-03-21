@@ -1,6 +1,7 @@
 import Login from "./Pages/Login";
 import Register from "./Pages/Register";
 import Dashboard from "./Pages/Dashboard";
+import Habits from "./Pages/Habits";
 import {Routes, Route, Navigate} from "react-router-dom";
 function App(){
   return(
@@ -10,9 +11,9 @@ function App(){
 
       <Route path = "/login" element = {<Login></Login>}></Route>
 
-      <Route path = "/register" element = {<Register></Register>}></Route>
-
-      <Route path = "/dashboard" element = {<Dashboard></Dashboard>}></Route>
+      <Route path="/register" element={<Register />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/habits" element={<Habits />} />
     </Routes>
   );
 }

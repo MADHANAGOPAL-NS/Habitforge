@@ -40,6 +40,16 @@ const user_schema = new mongoose.Schema({
         default: false
     },
 
+    streak: {
+        type: Number,
+        default: 0
+    },
+
+    profilePicture: {
+        type: String,
+        default: ""
+    }
+
 }, {timeStamps: true});
 
 module.exports = mongoose.model("User", user_schema);

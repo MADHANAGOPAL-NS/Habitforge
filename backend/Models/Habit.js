@@ -35,6 +35,11 @@ const habit_schema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now
+    },
+
+    streak: {
+        type: Number,
+        default: 0
     }
 });
 

@@ -1,63 +1,70 @@
 //this file contains the logic for calculating the streak by fetching the log from the DB...
-function streak_calculation(logs){
+function streak_calculation(logs, frequency = "daily"){
     if(!logs || logs.length === 0){
         return 0;
     }
 
-    //Extract the date and convert to number...
+    // ALWAYS format to 'YYYY-MM-DD' securely matching the original local time regardless of UTC offset!
+    const getBucketString = (dateObj) => {
+        const d = new Date(dateObj);
+        if (frequency === "weekly") {
+            const day = d.getDay();
+            const diff = d.getDate() - day + (day === 0 ? -6 : 1); 
+            d.setDate(diff); // Always pins the date object purely to Monday
+        }
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const dayOfMonth = String(d.getDate()).padStart(2, '0');
+        return `${year}-${month}-${dayOfMonth}`;
+    };
 
-    const dates = logs.map(log => {
-        const date = new Date(log.completedDate);
-        date.setHours(0, 0, 0, 0);
-        return date.getTime();
-    });
+    const dates = logs.map(log => getBucketString(new Date(log.completedDate)));
 
-    //Remove duplicate completion
+    // Remove duplicates and sort descending (newest to oldest strings)
+    const unique_dates = [...new Set(dates)].sort().reverse();
 
-    const unique_date = [...new Set(dates)];
-
-    //sort the dates in descending order...
-
-    unique_date.sort((a, b) => b - a)
-
-    //prepare today date
-
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    let today_time = today.getTime();
-
-    //converting seconds to milliseconds
-
-    const one_day = 24*60*60*1000;
+    if (unique_dates.length === 0) return 0;
 
     let streak = 0;
+    
+    // Get server's absolute true today string LOCALLY
+    const todayStr = getBucketString(new Date());
+    
+    // Helper to extract absolute UTC time from string to bypass local DST jumps entirely
+    const parseDate = (dStr) => new Date(dStr + "T00:00:00Z").getTime();
+    
+    const todayVal = parseDate(todayStr);
+    const firstVal = parseDate(unique_dates[0]);
+    
+    const one_day = 24 * 60 * 60 * 1000;
+    
+    // How many days ago was the last log bucket?
+    const diffDays = Math.round((todayVal - firstVal) / one_day);
 
-    //checking if today habit is completed or not...
+    const periodGap = frequency === "weekly" ? 7 : 1;
 
-   const diff = Math.floor((today_time - unique_date[0]) / one_day);
-
-   if(diff === 0){
-    streak = 1;
-   }
-
-   else if(diff === 1){
-    streak = 1;
-    today_time = unique_date[0];
-   }
-
-   else{
-    return 0;
-   }
-    //looping through remaining dates...
-
-    for(let i = 1 ; i < unique_date.length; i++){
-        if(unique_date[i] === unique_date[i - 1] - one_day){
+    if (diffDays === 0 || diffDays === periodGap) {
+        streak = 1;
+    } else if (diffDays < 0) {
+        // Safe-guard edgecase where timezone somehow evaluated to future time
+        streak = 1;
+    } else {
+        return 0; // They missed a period completely. Broken.
+    }
+   
+    // Jump down the array confirming exact period separations 
+    for(let i = 1 ; i < unique_dates.length; i++){
+        const curr = parseDate(unique_dates[i]);
+        const prev = parseDate(unique_dates[i - 1]);
+        const delta = Math.round((prev - curr) / one_day);
+        
+        if (delta === periodGap) {
             streak++;
-        }
-        else{
+        } else {
             break;
         }
     }
+    
     return streak;
 }
 

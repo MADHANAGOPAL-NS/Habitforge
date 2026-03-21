@@ -8,6 +8,8 @@ const connect_DB = require("./Config/db");
 
 const auth_routes = require("./Routes/authRoutes");
 
+const userRoutes = require("./Routes/userRoutes");
+
 const habit_routes = require("./Routes/habitRoutes");
 //storing all the functionalities in the app variable...
 const app = express();
@@ -20,7 +22,7 @@ connect_DB();
 app.use(cors());
 
 //since the text will be raw text in express so we are converting it into JSON format
-app.use(express.json());
+app.use(express.json({ limit: "15mb" }));
 
 //Routing from authRoutes.js
 
@@ -30,11 +32,15 @@ app.use("/api/auth", auth_routes);
 
 app.use("/api/habits", habit_routes);
 
+//user Router
+
+app.use("/api/users", userRoutes);
+
 app.get("/", (req, res) =>{
     res.send("Habitforge API is running");
 });
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT ? 5100 : 5100; // FORCED MIGRATION TO AVOID GHOST PROCESSES
 
 app.listen(PORT, ()=>{
     console.log(`Server${PORT} is running successfully`);

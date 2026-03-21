@@ -1,6 +1,6 @@
 import React from "react";
 
-const StatsCard = () => {
+const StatsCard = ({xp, level, streak}) => {
   return (
     <div className="bg-[#121623] p-8 rounded-3xl border border-[#1e293b] shadow-lg flex flex-col items-center">
       
@@ -16,6 +16,23 @@ const StatsCard = () => {
         <div className="w-2.5 bg-[#1A2035] h-[25px] rounded-full"></div>
       </div>
 
+        <div className="grid grid-cols-3 gap-6 text-center w-full">
+          <div>
+            <p className="text-xs text-gray-400">XP</p>
+            <p className="text-lg font-bold text-white">{xp || 0}</p>
+          </div>
+
+          <div>
+            <p className="text-xs text-gray-400">Level</p>
+            <p className="text-lg font-bold text-white">{level || 1}</p>
+          </div>
+
+          <div>
+            <p className="text-xs text-gray-400">Streak</p>
+            <p className="text-lg font-bold text-white">{streak || 0}</p>
+          </div>
+
+        </div>
     </div>
   );
 };
