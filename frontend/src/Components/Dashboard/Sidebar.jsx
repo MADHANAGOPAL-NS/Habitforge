@@ -53,10 +53,10 @@ const Sidebar = ({ userName, setUserName, userPhoto, setUserPhoto, level, xp }) 
 
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
-    
+
     canvas.width = croppedAreaPixels.width;
     canvas.height = croppedAreaPixels.height;
-    
+
     ctx.drawImage(
       image,
       croppedAreaPixels.x,
@@ -122,7 +122,7 @@ const Sidebar = ({ userName, setUserName, userPhoto, setUserPhoto, level, xp }) 
             <p className="text-xs text-gray-400 mb-2 font-semibold tracking-wider">LEVEL {level || 1}</p>
 
             <div className="h-1.5 bg-[#1A2035] rounded-full mb-2">
-              <div 
+              <div
                 className="h-1.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-1000 ease-out"
                 style={{ width: `${Math.min(100, ((xp || 0) % 20) / 20 * 100)}%` }}
               ></div>
@@ -134,25 +134,32 @@ const Sidebar = ({ userName, setUserName, userPhoto, setUserPhoto, level, xp }) 
           <ul className="space-y-2 text-gray-400 font-semibold text-sm tracking-wide">
 
             {/* Active / Optional Conditional Styling */}
-            <li 
+            <li
               onClick={() => navigate("/dashboard")}
               className="flex items-center gap-4 bg-gradient-to-r from-[#202946] to-[#141A2E] text-white p-3 px-4 rounded-xl cursor-pointer border border-[#2A344A]"
             >
               <FaThLarge className="text-lg" /> DASHBOARD
             </li>
 
-            <li 
+            <li
               onClick={() => navigate("/habits")}
               className="flex items-center gap-4 p-3 px-4 hover:bg-[#1A2035] hover:text-white rounded-xl cursor-pointer transition"
             >
               <FaTasks className="text-lg" /> HABITS
             </li>
 
-            <li className="flex items-center gap-4 p-3 px-4 hover:bg-[#1A2035] hover:text-white rounded-xl cursor-pointer transition">
+            <li
+              onClick={() => navigate("/stats")}
+              className={`flex items-center gap-4 p-3 px-4 hover:bg-[#1A2035] hover:text-white rounded-xl cursor-pointer transition ${window.location.pathname === '/stats'
+                  ? 'bg-gradient-to-r from-[#202946] to-[#141A2E] text-white border border-[#2A344A]'
+                  : 'text-gray-400'
+                }`}
+            >
               <FaChartBar className="text-lg" /> STATS
             </li>
 
-            <li 
+
+            <li
               onClick={handleOpenSettings}
               className="flex items-center gap-4 p-3 px-4 hover:bg-[#1A2035] hover:text-white rounded-xl cursor-pointer transition"
             >
@@ -162,7 +169,7 @@ const Sidebar = ({ userName, setUserName, userPhoto, setUserPhoto, level, xp }) 
         </div>
 
         {/*Bottom Section*/}
-        <div 
+        <div
           onClick={handleLogoutClick}
           className="flex items-center gap-4 p-3 px-4 text-red-500 cursor-pointer hover:bg-red-500/10 transition rounded-xl"
         >
@@ -175,20 +182,20 @@ const Sidebar = ({ userName, setUserName, userPhoto, setUserPhoto, level, xp }) 
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
           <div className="bg-[#121623] border border-[#2A344A] rounded-3xl p-8 w-[420px] shadow-2xl flex flex-col items-center animate-in fade-in zoom-in-95 duration-200">
             <div className="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center mb-6 text-red-500 shadow-inner">
-               <FaSignOutAlt className="text-4xl translate-x-1" />
+              <FaSignOutAlt className="text-4xl translate-x-1" />
             </div>
             <h2 className="text-white text-2xl font-bold mb-3 tracking-wide">Ready to leave?</h2>
             <p className="text-gray-400 text-[15px] font-medium text-center mb-8 px-4">
               Are you sure you want to log out of your HabitForge account?
             </p>
             <div className="flex gap-4 w-full font-semibold tracking-wide">
-              <button 
+              <button
                 onClick={() => setShowLogoutModal(false)}
                 className="flex-1 py-3 rounded-2xl border border-[#2A344A] text-gray-400 hover:text-white hover:border-gray-500 hover:bg-[#1A2035] transition"
               >
                 Cancel
               </button>
-              <button 
+              <button
                 onClick={confirmLogout}
                 className="flex-1 py-3 rounded-2xl bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-red-500/20 transition"
               >
@@ -203,7 +210,7 @@ const Sidebar = ({ userName, setUserName, userPhoto, setUserPhoto, level, xp }) 
       {showSettingsModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
           <div className="bg-[#121623] border border-[#2A344A] rounded-3xl p-8 w-[420px] shadow-2xl flex flex-col items-center animate-in fade-in zoom-in-95 duration-200 overflow-hidden relative">
-            
+
             {isCropping ? (
               <div className="w-full flex flex-col items-center">
                 <h2 className="text-white text-xl font-bold mb-4">Crop Photo</h2>
@@ -233,13 +240,13 @@ const Sidebar = ({ userName, setUserName, userPhoto, setUserPhoto, level, xp }) 
                   className="w-full mb-6 accent-purple-500"
                 />
                 <div className="flex gap-4 w-full font-semibold">
-                  <button 
+                  <button
                     onClick={() => setIsCropping(false)}
                     className="flex-1 py-3 rounded-2xl border border-[#2A344A] text-gray-400 hover:text-white hover:bg-[#1A2035] transition"
                   >
                     Cancel
                   </button>
-                  <button 
+                  <button
                     onClick={handleCropSave}
                     className="flex-1 py-3 rounded-2xl bg-purple-500 hover:bg-purple-600 text-white transition"
                   >
@@ -250,7 +257,7 @@ const Sidebar = ({ userName, setUserName, userPhoto, setUserPhoto, level, xp }) 
             ) : (
               <>
                 <h2 className="text-white text-2xl font-bold mb-6 tracking-wide w-full text-center">Profile Settings</h2>
-                
+
                 {/* Photo Upload */}
                 <div className="relative mb-6 group cursor-pointer">
                   <div className="w-28 h-28 rounded-full bg-[#1A2035] border-2 border-[#2A344A] flex flex-col items-center justify-center overflow-hidden shadow-inner">
@@ -271,8 +278,8 @@ const Sidebar = ({ userName, setUserName, userPhoto, setUserPhoto, level, xp }) 
                 {/* Name Change */}
                 <div className="w-full mb-8">
                   <label className="block text-gray-400 text-sm font-semibold mb-2">Display Name</label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     value={draftName}
                     onChange={(e) => setDraftName(e.target.value)}
                     className="w-full bg-[#1A2035] border border-[#2A344A] rounded-xl px-4 py-3 text-white outline-none focus:border-[#818CF8] transition"
@@ -281,14 +288,14 @@ const Sidebar = ({ userName, setUserName, userPhoto, setUserPhoto, level, xp }) 
                 </div>
 
                 <div className="flex flex-col gap-3 w-full font-semibold tracking-wide">
-                  <button 
+                  <button
                     onClick={handleSaveChanges}
                     className="w-full py-3 rounded-2xl bg-gradient-to-r from-purple-500 to-[#7C3AED] hover:opacity-90 text-white shadow-lg shadow-purple-500/20 transition"
                   >
                     Save Changes
                   </button>
-                  
-                  <button 
+
+                  <button
                     onClick={() => {
                       setShowSettingsModal(false);
                       setShowDeleteModal(true);
@@ -297,8 +304,8 @@ const Sidebar = ({ userName, setUserName, userPhoto, setUserPhoto, level, xp }) 
                   >
                     <FaTrash /> Delete Account
                   </button>
-                  
-                  <button 
+
+                  <button
                     onClick={() => setShowSettingsModal(false)}
                     className="w-full py-2 text-gray-400 hover:text-white transition mt-2 text-sm"
                   >
@@ -317,20 +324,20 @@ const Sidebar = ({ userName, setUserName, userPhoto, setUserPhoto, level, xp }) 
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-sm">
           <div className="bg-[#121623] border border-[#2A344A] rounded-3xl p-8 w-[420px] shadow-2xl flex flex-col items-center animate-in fade-in zoom-in-95 duration-200">
             <div className="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center mb-6 text-red-500 shadow-inner">
-               <FaExclamationTriangle className="text-4xl" />
+              <FaExclamationTriangle className="text-4xl" />
             </div>
             <h2 className="text-white text-2xl font-bold mb-3 tracking-wide text-center">Delete Account?</h2>
             <p className="text-gray-400 text-[15px] font-medium text-center mb-8 px-2">
               Are you sure you want to permanently delete your account? This action cannot be undone.
             </p>
             <div className="flex gap-4 w-full font-semibold tracking-wide">
-              <button 
+              <button
                 onClick={() => setShowDeleteModal(false)}
                 className="flex-1 py-3 rounded-2xl border border-[#2A344A] text-gray-400 hover:text-white hover:border-gray-500 hover:bg-[#1A2035] transition"
               >
                 Cancel
               </button>
-              <button 
+              <button
                 onClick={confirmDeleteAccount}
                 className="flex-1 py-3 rounded-2xl bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-red-500/20 transition"
               >

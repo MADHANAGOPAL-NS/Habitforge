@@ -6,11 +6,16 @@ const cors = require("cors");
 
 const connect_DB = require("./Config/db");
 
+
+//importing all the routers to the main server...
+
 const auth_routes = require("./Routes/authRoutes");
 
 const userRoutes = require("./Routes/userRoutes");
 
 const habit_routes = require("./Routes/habitRoutes");
+
+const statsRoutes = require("./Routes/statsRoutes");
 //storing all the functionalities in the app variable...
 const app = express();
 
@@ -36,13 +41,17 @@ app.use("/api/habits", habit_routes);
 
 app.use("/api/users", userRoutes);
 
-app.get("/", (req, res) =>{
+//stats router
+
+app.use("/api/stats", statsRoutes);
+
+app.get("/", (req, res) => {
     res.send("Habitforge API is running");
 });
 
 const PORT = process.env.PORT ? 5100 : 5100; // FORCED MIGRATION TO AVOID GHOST PROCESSES
 
-app.listen(PORT, ()=>{
+app.listen(PORT, () => {
     console.log(`Server${PORT} is running successfully`);
 });
 

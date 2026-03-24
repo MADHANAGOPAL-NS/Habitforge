@@ -253,6 +253,9 @@ const complete_habit = async(req, res) => {
         const xp_gained = calculateXP(streak);
         user.xp += xp_gained;
 
+        // Dynamically store the exact XP earned uniquely on this specific chronological log sequence structurally natively!
+        await Habit_log.updateOne({_id: new_log._id}, { xpEarned: xp_gained });
+
         //calculate level
         user.level = calculateLevel(user.xp);
 

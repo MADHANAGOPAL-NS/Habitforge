@@ -18,6 +18,11 @@ const habit_log = new mongoose.Schema({
         type: Date,
         require: true
     },
+
+    xpEarned: {
+        type: Number,
+        default: 0
+    }
 }, {timestamps: true});
 
 module.exports = mongoose.model("HabitLog", habit_log);
