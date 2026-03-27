@@ -23,11 +23,23 @@ const checkBadges = require("../utils/badges");
 
 //API code for habit creation
 const create_habit = async (req, res) => {
-    try{
-        const{habitName, frequency, color, icon} = req.body;
+    try {
+        const { habitName, frequency, color, icon } = req.body;
+        const userId = req.user.id;
+
+        // --- PREMIUM GATING (Max 5 Habits for Free Users) ---
+        const user = await User.findById(userId);
+        const habitCount = await Habit.countDocuments({ userId });
+
+        if (user && !user.isPremium && habitCount >= 5) {
+            return res.status(403).json({
+                message: "Limit reached! Free users can only add up to 5 habits. Upgrade to Premium for unlimited habits! 💎"
+            });
+        }
+        // ---------------------------------------------------
 
         const new_habit = new Habit({
-            habitName, frequency, color, icon, userId: req.user.id
+            habitName, frequency, color, icon, userId
         });
 
         const saved_habit = await new_habit.save();
@@ -36,8 +48,8 @@ const create_habit = async (req, res) => {
 
     }
 
-    catch(error){
-        res.status(500).json({message : error.message});
+    catch (error) {
+        res.status(500).json({ message: error.message });
     }
 };
 

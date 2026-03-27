@@ -16,6 +16,8 @@ const userRoutes = require("./Routes/userRoutes");
 const habit_routes = require("./Routes/habitRoutes");
 
 const statsRoutes = require("./Routes/statsRoutes");
+
+const premium = require("./Routes/premiumRoutes");
 //storing all the functionalities in the app variable...
 const app = express();
 
@@ -44,6 +46,10 @@ app.use("/api/users", userRoutes);
 //stats router
 
 app.use("/api/stats", statsRoutes);
+
+//premium router
+
+app.use("/api/premium", premium);
 
 app.get("/", (req, res) => {
     res.send("Habitforge API is running");

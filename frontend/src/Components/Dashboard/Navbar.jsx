@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { FaSearch, FaBell, FaStar, FaFire, FaUserAlt } from "react-icons/fa";
+import { FaSearch, FaBell, FaStar, FaFire, FaUserAlt, FaRocket } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
-const Navbar = ({ userName, userPhoto, xp, streak, searchTerm, setSearchTerm, notifications = [] }) => {
+const Navbar = ({ userName, userPhoto, xp, streak, searchTerm, setSearchTerm, notifications = [], isPremium }) => {
   const [showDropdown, setShowDropdown] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div className="h-20 bg-[#0B0F19] flex items-center justify-between px-8 border-b border-[#1e293b]">
@@ -34,12 +36,17 @@ const Navbar = ({ userName, userPhoto, xp, streak, searchTerm, setSearchTerm, no
         </div>
 
         {/*Premium Button*/}
-        <button className="bg-gradient-to-r from-purple-500 to-[#7C3AED] px-4 py-2 rounded-xl text-white text-sm font-semibold flex items-center gap-2 hover:opacity-90 transition shadow-lg shadow-purple-500/20">
-          🚀 Upgrade to Premium
-          <span className="bg-white/20 text-white text-[10px] px-1.5 py-0.5 rounded ml-1">
-            PRO
-          </span>
-        </button>
+        {!isPremium && (
+          <button 
+            onClick={() => navigate("/upgrade")}
+            className="bg-gradient-to-r from-purple-500 to-[#7C3AED] px-4 py-2 rounded-xl text-white text-sm font-semibold flex items-center gap-2 hover:opacity-90 transition shadow-lg shadow-purple-500/20"
+          >
+            <FaRocket className="text-xs" /> Upgrade to Premium
+            <span className="bg-white/20 text-white text-[10px] px-1.5 py-0.5 rounded ml-1">
+              PRO
+            </span>
+          </button>
+        )}
 
         {/*Bell*/}
         <div className="relative">

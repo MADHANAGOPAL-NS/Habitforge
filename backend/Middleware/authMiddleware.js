@@ -4,15 +4,20 @@ const jwt = require("jsonwebtoken");
 
 const middle_ware = (req, res, next) => {
     const auth_header = req.headers.authorization;
+    let token = "";
 
-    if(!auth_header){
-        return res.status(401).json({message : "No token provided"});
+    if (auth_header) {
+        token = auth_header.split(" ")[1];
+    } else if (req.query.token) {
+        token = req.query.token;
     }
 
-    const token = auth_header.split(" ")[1];
+    if (!token) {
+        return res.status(401).json({ message: "No token provided" });
+    }
 
     //we are verifying the user and allow the CRUD operations to keep secured...
-    try{
+    try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
         req.user = decoded;
@@ -20,8 +25,8 @@ const middle_ware = (req, res, next) => {
         next();
     }
 
-    catch(error){
-        res.status(401).json({message : "Inavlid token"});
+    catch (error) {
+        res.status(401).json({ message: "Inavlid token" });
     }
 };
 

@@ -37,8 +37,6 @@ const Dashboard = () => {
         fetchDashboard();
     }, []);
 
-    console.log("Dashboard Data:", userData);
-
     const handleSetUserName = (newName) => {
         if (userData) {
             setUserData({ ...userData, name: newName });
@@ -57,13 +55,16 @@ const Dashboard = () => {
             />
 
             <div className="flex-1 flex flex-col h-screen overflow-hidden">
-                <Navbar userName={userData?.name} userPhoto={userPhoto}
-                    xp = {userData?.xp}
-                    streak = {userData?.streak} 
-                    searchTerm = {searchTerm}
-                    setSearchTerm = {setSearchTerm}
-                    notifications = {userData?.notifications || []}
-                    />
+                <Navbar 
+                    userName={userData?.name} 
+                    userPhoto={userPhoto}
+                    xp={userData?.xp}
+                    streak={userData?.streak} 
+                    searchTerm={searchTerm}
+                    setSearchTerm={setSearchTerm}
+                    notifications={userData?.notifications || []}
+                    isPremium={userData?.isPremium === true}
+                />
 
                 <div className="flex-1 overflow-y-auto w-full">
                     <div className="flex gap-8 p-8 max-w-[1600px] mx-auto">

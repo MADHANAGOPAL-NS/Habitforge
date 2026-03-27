@@ -99,13 +99,33 @@ const HabitList = ({ refreshDashboard, searchTerm }) => {
 
         } catch (error) {
             console.error("Error adding habit:", error);
-            Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                text: "Failed to save habit!",
-                background: "#121623",
-                color: "#fff"
-            });
+            
+            if (error.response?.status === 403) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Habit Limit Reached",
+                    text: "Habit limit is only up to 5. Need to upgrade Premium to add more habits! 💎",
+                    showCancelButton: true,
+                    confirmButtonText: "Upgrade Now 🚀",
+                    confirmButtonColor: "#8B5CF6",
+                    cancelButtonColor: "#2A344A",
+                    background: "#121623",
+                    color: "#fff"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        setShowInput(false);
+                        navigate("/upgrade");
+                    }
+                });
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Failed to save habit!",
+                    background: "#121623",
+                    color: "#fff"
+                });
+            }
         }
     };
 

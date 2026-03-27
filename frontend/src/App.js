@@ -3,6 +3,7 @@ import Register from "./Pages/Register";
 import Dashboard from "./Pages/Dashboard";
 import Habits from "./Pages/Habits";
 import Stats from "./Pages/Stats";
+import Upgrade from "./Pages/Upgrade";
 import { Routes, Route, Navigate } from "react-router-dom";
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/habits" element={<Habits />} />
       <Route path="/stats" element={<Stats></Stats>} />
+      <Route path="/upgrade" element={<Upgrade />} />
     </Routes>
   );
 }
