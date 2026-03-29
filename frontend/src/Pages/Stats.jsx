@@ -40,10 +40,10 @@ const Stats = () => {
 
                 // Fetch basic data
                 const [userRes, completionRes, weeklyRes, xpRes] = await Promise.all([
-                    axios.get("http://localhost:5000/api/users/dashboard", { headers }),
-                    axios.get("http://localhost:5000/api/stats/completion-rate", { headers }),
-                    axios.get("http://localhost:5000/api/stats/weekly-activity", { headers }),
-                    axios.get("http://localhost:5000/api/stats/xp-growth", { headers })
+                    axios.get("https://habitforge-3rb4.onrender.com/api/users/dashboard", { headers }),
+                    axios.get("https://habitforge-3rb4.onrender.com/api/stats/completion-rate", { headers }),
+                    axios.get("https://habitforge-3rb4.onrender.com/api/stats/weekly-activity", { headers }),
+                    axios.get("https://habitforge-3rb4.onrender.com/api/stats/xp-growth", { headers })
                 ]);
 
                 setUserData(userRes.data);
@@ -54,8 +54,8 @@ const Stats = () => {
                 // Fetch Premium Data if user is premium
                 if (userRes.data.isPremium) {
                     const [heatRes, consistRes] = await Promise.all([
-                        axios.get("http://localhost:5000/api/premium/heatmap", { headers }),
-                        axios.get("http://localhost:5000/api/premium/consistency-30", { headers })
+                        axios.get("https://habitforge-3rb4.onrender.com/api/premium/heatmap", { headers }),
+                        axios.get("https://habitforge-3rb4.onrender.com/api/premium/consistency-30", { headers })
                     ]);
                     setHeatmapData(heatRes.data.map(d => ({ date: d._id, count: d.count })));
                     setConsistencyData(consistRes.data.map(d => ({ date: d._id, count: d.count })));
@@ -78,7 +78,7 @@ const Stats = () => {
             return;
         }
         try {
-            const res = await axios.get("http://localhost:5000/api/premium/export", {
+            const res = await axios.get("https://habitforge-3rb4.onrender.com/api/premium/export", {
                 headers: { Authorization: `Bearer ${token}` },
                 responseType: 'blob'
             });

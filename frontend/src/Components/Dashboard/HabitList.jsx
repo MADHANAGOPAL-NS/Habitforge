@@ -38,7 +38,7 @@ const HabitList = ({ refreshDashboard, searchTerm }) => {
         try {
             const token = localStorage.getItem("token");
 
-            const res = await axios.get("http://localhost:5000/api/habits", {
+            const res = await axios.get("https://habitforge-3rb4.onrender.com/api/habits", {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -63,7 +63,7 @@ const HabitList = ({ refreshDashboard, searchTerm }) => {
             const token = localStorage.getItem("token");
 
             await axios.post(
-                "http://localhost:5000/api/habits", // Route is just '/' in backend
+                "https://habitforge-3rb4.onrender.com/api/habits", // Route is just '/' in backend
                 { 
                     habitName: newHabit,
                     frequency: frequency,

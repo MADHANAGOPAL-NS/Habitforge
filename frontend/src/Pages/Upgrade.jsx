@@ -9,7 +9,7 @@ const Upgrade = () => {
     const handleUpgrade = async () => {
         try {
             const token = localStorage.getItem("token");
-            await axios.post("http://localhost:5000/api/premium/upgrade", {}, {
+            await axios.post("https://habitforge-3rb4.onrender.com/api/premium/upgrade", {}, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             Swal.fire({

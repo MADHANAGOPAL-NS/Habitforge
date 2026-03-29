@@ -20,7 +20,7 @@ const HabitItem = ({ id, title, streak, icon, iconBg, checked, fetchHabits, refr
       const token = localStorage.getItem("token");
 
       await axios.post(
-        `http://localhost:5000/api/habits/${id}/complete`,
+        `https://habitforge-3rb4.onrender.com/api/habits/${id}/complete`,
         {},
         {
           headers: {
@@ -48,7 +48,7 @@ const HabitItem = ({ id, title, streak, icon, iconBg, checked, fetchHabits, refr
     try{
       const token = localStorage.getItem("token");
 
-      await axios.delete(`http://localhost:5000/api/habits/${id}`,{
+      await axios.delete(`https://habitforge-3rb4.onrender.com/api/habits/${id}`,{
         headers: {
           Authorization: `Bearer ${token}`
         },

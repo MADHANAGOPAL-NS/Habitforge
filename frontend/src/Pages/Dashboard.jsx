@@ -19,7 +19,7 @@ const Dashboard = () => {
         try {
             const token = localStorage.getItem("token");
 
-            const res = await axios.get("http://localhost:5000/api/users/dashboard", {
+            const res = await axios.get("https://habitforge-3rb4.onrender.com/api/users/dashboard", {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
