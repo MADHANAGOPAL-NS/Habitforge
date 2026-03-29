@@ -55,7 +55,7 @@ app.get("/", (req, res) => {
     res.send("Habitforge API is running");
 });
 
-const PORT = process.env.PORT ? 5100 : 5100; // FORCED MIGRATION TO AVOID GHOST PROCESSES
+const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
     console.log(`Server${PORT} is running successfully`);
