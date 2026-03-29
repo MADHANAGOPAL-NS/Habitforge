@@ -87,4 +87,27 @@ const login_user = async(req, res) => {
     }
 };
 
-module.exports = {register_user, login_user};
+// Reset Password
+const reset_password = async(req, res) => {
+    try {
+        const { email, newPassword } = req.body;
+
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found with this email" });
+        }
+
+        const salting = await bcrypt.genSalt(10);
+        const hashed_pwd = await bcrypt.hash(newPassword, salting);
+
+        user.password = hashed_pwd;
+        await user.save();
+
+        res.status(200).json({ message: "Password updated successfully" });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+module.exports = {register_user, login_user, reset_password};

@@ -11,5 +11,8 @@ router.post("/register", auth_controller.register_user);
 //creating API for login
 router.post("/login", auth_controller.login_user);
 
+//creating API for reset password
+router.post("/reset-password", auth_controller.reset_password);
+
 module.exports = router;
 
