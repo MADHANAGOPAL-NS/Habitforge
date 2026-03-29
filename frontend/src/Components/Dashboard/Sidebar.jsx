@@ -89,7 +89,7 @@ const Sidebar = ({ userName, setUserName, userPhoto, setUserPhoto, level, xp }) 
   const handleSaveChanges = async () => {
     try {
       const token = localStorage.getItem("token");
-      await axios.put("http://localhost:5100/api/users/settings", {
+      await axios.put("http://localhost:5000/api/users/settings", {
         name: draftName,
         profilePicture: draftPhoto
       }, {
@@ -117,7 +117,7 @@ const Sidebar = ({ userName, setUserName, userPhoto, setUserPhoto, level, xp }) 
       const token = localStorage.getItem("token");
 
       // Make API request to delete user data from DB
-      await axios.delete("http://localhost:5100/api/users/settings", {
+      await axios.delete("http://localhost:5000/api/users/settings", {
         headers: { Authorization: `Bearer ${token}` }
       });
 

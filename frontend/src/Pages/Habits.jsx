@@ -12,7 +12,7 @@ const Habits = () => {
       const token = localStorage.getItem("token");
 
       const res = await axios.get(
-        "http://localhost:5100/api/habits/all/logs",
+        "http://localhost:5000/api/habits/all/logs",
         {
           headers: {
             Authorization: `Bearer ${token}`,

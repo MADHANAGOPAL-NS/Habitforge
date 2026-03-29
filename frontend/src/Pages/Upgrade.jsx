@@ -9,7 +9,7 @@ const Upgrade = () => {
     const handleUpgrade = async () => {
         try {
             const token = localStorage.getItem("token");
-            await axios.post("http://localhost:5100/api/premium/upgrade", {}, {
+            await axios.post("http://localhost:5000/api/premium/upgrade", {}, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             Swal.fire({
