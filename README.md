@@ -65,7 +65,8 @@ To showcase realistic business architecture, the application integrates a clear 
 - Handled seamlessly with an `isPremium` boolean gate implemented throughout the backend controllers and frontend view layers.
 
 ## Deployment
-Frontend and Backend both Vercel
+Frontend: Vercel
+Backend: Render
 
 ## Live URL
 
