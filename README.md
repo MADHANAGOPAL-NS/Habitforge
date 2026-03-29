@@ -50,6 +50,7 @@ At the core of the HabitForge backend is the mathematical streak engine:
 The gamification engine relies on a linear and highly predictable progression model to ensure consistency is actively rewarded over time.
 - **Formula Mapping**: `Level = 1 + floor(XP / 20)`
 - **Core Explanation**: As a user successfully completes their daily and weekly habits, they accumulate total XP. Based on the mathematical floor grouping, every 20 XP gathered consistently maps to an increase of exactly 1 level, ensuring smooth and transparent progress plotting.
+
 ## Phase 3: Data Visualization & Analytics
 
 To improve engagement, HabitForge incorporates Recharts to effectively display:
@@ -66,7 +67,7 @@ To showcase realistic business architecture, the application integrates a clear 
 
 ## Deployment
 Frontend: Vercel
-Backend Render
+Backend: Render
 
 ## Live URL
 
