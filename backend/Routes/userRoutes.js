@@ -126,5 +126,25 @@ router.put("/settings", authMiddleware, async (req, res) => {
         res.status(500).json({ message: "Failed to update profile settings" });
     }
 });
+router.delete("/settings", authMiddleware, async (req, res) => {
+    try {
+        const userIdObj = new mongoose.Types.ObjectId(req.user.id || req.user._id);
+
+        //deleting the user habit and habitlogs
+
+        await Habit_log.deleteMany({ userId: userIdObj });
+
+        await Habit.deleteMany({ userId: userIdObj });
+
+        //delete the user account
+
+        await User.findByIdAndDelete(userIdObj);
+
+        res.status(200).json({ message: "Account deleted successfully" });
+    }
+    catch (error) {
+        res.status(500).json({ message: "Failed to delete account" });
+    }
+});
 
 module.exports = router;

@@ -7,23 +7,23 @@ const Navbar = ({ userName, userPhoto, xp, streak, searchTerm, setSearchTerm, no
   const navigate = useNavigate();
 
   return (
-    <div className="h-20 bg-[#0B0F19] flex items-center justify-between px-8 border-b border-[#1e293b]">
+    <div className="h-20 bg-[#0B0F19] flex items-center justify-between px-4 pl-16 md:px-8 border-b border-[#1e293b]">
       {/*Search*/}
-      <div className="flex items-center bg-[#181F30] px-4 py-3 rounded-xl w-[400px]">
+      <div className="hidden md:flex items-center bg-[#181F30] px-4 py-3 rounded-xl w-[250px] lg:w-[400px]">
         <FaSearch className="text-gray-500 mr-3 text-sm"></FaSearch>
-        <input 
-          type="text" 
-          placeholder="Search habits..." 
-          value = {searchTerm}
-          onChange = {(e) => setSearchTerm(e.target.value)}
+        <input
+          type="text"
+          placeholder="Search habits..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
           className="bg-transparent outline-none text-sm w-full text-gray-300 placeholder-gray-500"
         />
       </div>
 
       {/*Right*/}
-      <div className="flex items-center gap-8">
+      <div className="flex items-center gap-4 md:gap-8 ml-auto">
         {/* User Info & Stats */}
-        <div className="flex flex-col items-end">
+        <div className="hidden sm:flex flex-col items-end">
           <span className="text-white text-sm font-medium mb-1">Welcome, {userName}</span>
           <div className="flex items-center gap-3 text-[11px] font-bold">
             <span className="flex items-center gap-1 text-yellow-500">
@@ -37,11 +37,11 @@ const Navbar = ({ userName, userPhoto, xp, streak, searchTerm, setSearchTerm, no
 
         {/*Premium Button*/}
         {!isPremium && (
-          <button 
+          <button
             onClick={() => navigate("/upgrade")}
-            className="bg-gradient-to-r from-purple-500 to-[#7C3AED] px-4 py-2 rounded-xl text-white text-sm font-semibold flex items-center gap-2 hover:opacity-90 transition shadow-lg shadow-purple-500/20"
+            className="bg-gradient-to-r from-purple-500 to-[#7C3AED] px-3 py-2 md:px-4 md:py-2 rounded-xl text-white text-xs md:text-sm font-semibold flex items-center gap-1 md:gap-2 hover:opacity-90 transition shadow-lg shadow-purple-500/20"
           >
-            <FaRocket className="text-xs" /> Upgrade to Premium
+            <FaRocket className="text-xs" /> <span className="hidden lg:inline">Upgrade to Premium</span><span className="lg:hidden">Upgrade</span>
             <span className="bg-white/20 text-white text-[10px] px-1.5 py-0.5 rounded ml-1">
               PRO
             </span>
@@ -56,7 +56,7 @@ const Navbar = ({ userName, userPhoto, xp, streak, searchTerm, setSearchTerm, no
               <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border border-[#0B0F19] shadow-[0_0_8px_rgba(239,68,68,0.8)]"></div>
             )}
           </div>
-          
+
           {showDropdown && (
             <div className="absolute right-0 mt-4 w-[280px] bg-[#121623] border border-[#2A344A] rounded-2xl shadow-2xl py-2 z-50 animate-in fade-in slide-in-from-top-4 duration-200">
               <h3 className="text-white text-[11px] font-bold px-5 py-3 border-b border-[#2A344A] tracking-widest text-gray-400 uppercase">
@@ -85,10 +85,10 @@ const Navbar = ({ userName, userPhoto, xp, streak, searchTerm, setSearchTerm, no
         <div className="w-10 h-10 rounded-full bg-gradient-to-b from-purple-500 to-pink-500 p-[2px] cursor-pointer shadow-lg shadow-purple-500/30">
           <div className="flex items-center justify-center bg-[#1A2035] w-full h-full rounded-full overflow-hidden">
             {userPhoto ? (
-              <img 
-                src={userPhoto} 
-                alt="Avatar" 
-                className="w-full h-full rounded-full object-cover" 
+              <img
+                src={userPhoto}
+                alt="Avatar"
+                className="w-full h-full rounded-full object-cover"
               />
             ) : (
               <FaUserAlt className="text-gray-400 text-sm" />

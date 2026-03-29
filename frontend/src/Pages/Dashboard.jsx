@@ -12,11 +12,11 @@ const Dashboard = () => {
     //Store full user data
     const [userData, setUserData] = useState(null);
     const [userPhoto, setUserPhoto] = useState(null);
-    const[searchTerm, setSearchTerm] = useState("");
+    const [searchTerm, setSearchTerm] = useState("");
 
     //Fetch dashboard data
     const fetchDashboard = async () => {
-        try{
+        try {
             const token = localStorage.getItem("token");
 
             const res = await axios.get("http://localhost:5100/api/users/dashboard", {
@@ -28,7 +28,7 @@ const Dashboard = () => {
             if (res.data.profilePicture) {
                 setUserPhoto(res.data.profilePicture);
             }
-        } catch(error){
+        } catch (error) {
             console.error("Dashboard fetch error: ", error);
         }
     };
@@ -45,21 +45,21 @@ const Dashboard = () => {
 
     return (
         <div className="flex bg-[#0B0F19] text-white min-h-screen font-sans">
-            <Sidebar 
-                userName={userData?.name || ""} 
+            <Sidebar
+                userName={userData?.name || ""}
                 setUserName={handleSetUserName}
-                userPhoto={userPhoto} 
-                setUserPhoto={setUserPhoto} 
+                userPhoto={userPhoto}
+                setUserPhoto={setUserPhoto}
                 level={userData?.level}
                 xp={userData?.xp}
             />
 
             <div className="flex-1 flex flex-col h-screen overflow-hidden">
-                <Navbar 
-                    userName={userData?.name} 
+                <Navbar
+                    userName={userData?.name}
                     userPhoto={userPhoto}
                     xp={userData?.xp}
-                    streak={userData?.streak} 
+                    streak={userData?.streak}
                     searchTerm={searchTerm}
                     setSearchTerm={setSearchTerm}
                     notifications={userData?.notifications || []}
@@ -67,22 +67,22 @@ const Dashboard = () => {
                 />
 
                 <div className="flex-1 overflow-y-auto w-full">
-                    <div className="flex gap-8 p-8 max-w-[1600px] mx-auto">
+                    <div className="flex flex-col xl:flex-row gap-8 p-4 md:p-8 max-w-[1600px] mx-auto">
 
                         {/* Left Main Content */}
                         <div className="flex-1">
                             <WelcomeCard userName={userData?.name} streak={userData?.streak} />
-                            <HabitList searchTerm = {searchTerm} refreshDashboard={fetchDashboard} />
+                            <HabitList searchTerm={searchTerm} refreshDashboard={fetchDashboard} />
                         </div>
 
                         {/* Right Sidebar Content */}
-                        <div className="w-[380px] space-y-8 flex-shrink-0">
-                            <BadgeCard badges = {userData?.badges}/>
-                            <StatsCard 
-                                xp = {userData?.xp}
-                                level = {userData?.level}
-                                streak = {userData?.streak}
-                                />
+                        <div className="w-full xl:w-[380px] space-y-8 flex-shrink-0">
+                            <BadgeCard badges={userData?.badges} />
+                            <StatsCard
+                                xp={userData?.xp}
+                                level={userData?.level}
+                                streak={userData?.streak}
+                            />
                         </div>
 
                     </div>

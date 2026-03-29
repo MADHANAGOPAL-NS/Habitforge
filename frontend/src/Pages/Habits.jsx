@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { FaTimes } from "react-icons/fa";
 
 const Habits = () => {
-
+  const navigate = useNavigate();
   const [logs, setLogs] = useState([]);
 
   const fetchLogs = async () => {
@@ -30,9 +32,17 @@ const Habits = () => {
   }, []);
 
   return (
-    <div className="p-8 text-white min-h-screen bg-[#0B0F19]">
+    <div className="p-8 text-white min-h-screen bg-[#0B0F19] relative">
 
-      <h2 className="text-3xl font-bold mb-8">📅 Habit History</h2>
+      {/* Cross Button to leave page */}
+      <button 
+        onClick={() => navigate("/dashboard")}
+        className="absolute top-6 right-6 lg:top-8 lg:right-8 bg-[#1A2035] hover:bg-[#2A344A] p-3 md:p-4 rounded-full text-gray-400 hover:text-white transition-all shadow-lg shadow-black/20 focus:outline-none"
+      >
+        <FaTimes className="text-xl" />
+      </button>
+
+      <h2 className="text-3xl font-bold mb-8 md:mt-0 mt-[1rem]">📅 Habit History</h2>
 
       {logs.length === 0 ? (
         <p className="text-gray-400">No history yet 🚀</p>

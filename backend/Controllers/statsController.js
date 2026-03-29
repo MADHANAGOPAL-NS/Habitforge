@@ -1,4 +1,4 @@
-//this file conttains the logic of analytics that need to be kept in stats section in the main dashboard
+//this file contains the logic of analytics that need to be kept in stats section in the main dashboard
 
 const mongoose = require('mongoose');
 
@@ -6,7 +6,10 @@ const Habit = require("../Models/Habit");
 
 const Habit_log = require("../Models/HabitLog");
 
-// Helper uniquely resolving "Monday-to-Sunday" bounds efficiently for natively scaling mathematically!
+// Timezone used for all date operations — must match the timezone used when storing completedDate
+const USER_TIMEZONE = "Asia/Kolkata";
+
+// Helper resolving "Monday-to-Sunday" bounds in the user's local timezone
 const getWeekBounds = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -30,7 +33,7 @@ const get_completion_rate = async (req, res) => {
 
         const totalhabits = await Habit.countDocuments({ userId: userIdObj });
 
-        // Bound to "Today" physically mathematically exactly locally
+        // Bound to "Today" in local timezone
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
@@ -55,7 +58,7 @@ const get_completion_rate = async (req, res) => {
     }
 };
 
-//Weekly activity chart (Strictly Fixed Monday - Sunday globally natively!)
+//Weekly activity chart (Strictly Fixed Monday - Sunday with correct timezone!)
 const get_weekly_activity = async (req, res) => {
     try {
         const userIdObj = new mongoose.Types.ObjectId(req.user.id);
@@ -70,7 +73,8 @@ const get_weekly_activity = async (req, res) => {
             },
             {
                 $group: {
-                    _id: { $dayOfWeek: "$completedDate" }, // MongoDB dynamically returns 1=Sun...7=Sat
+                    // Use timezone-aware $dayOfWeek so Saturday IST isn't misread as Friday UTC
+                    _id: { $dayOfWeek: { date: "$completedDate", timezone: USER_TIMEZONE } },
                     count: { $sum: 1 }
                 }
             }
@@ -86,6 +90,7 @@ const get_weekly_activity = async (req, res) => {
             { day: "Sun", count: 0 }
         ];
 
+        // MongoDB $dayOfWeek: 1=Sun, 2=Mon, ... 7=Sat
         const dbIndexToLocal = { 2: 0, 3: 1, 4: 2, 5: 3, 6: 4, 7: 5, 1: 6 };
 
         results.forEach(r => {
@@ -101,7 +106,7 @@ const get_weekly_activity = async (req, res) => {
     }
 };
 
-//XP Growth Analytics (Strictly Fixed Mon-Sun dynamically capturing exact XP mathematically!)
+//XP Growth Analytics (Strictly Fixed Mon-Sun with correct timezone!)
 const get_xp_growth = async (req, res) => {
     try {
         const userIdObj = new mongoose.Types.ObjectId(req.user.id);
@@ -116,24 +121,27 @@ const get_xp_growth = async (req, res) => {
             },
             {
                 $group: {
-                    // Extract exactly `YYYY-MM-DD` natively gracefully
-                    _id: { $dateToString: { format: "%Y-%m-%d", date: "$completedDate" } },
-                    // Seamlessly aggregate the actual exact XP dynamically gained, falling back statically to basic math if records are structurally old natively.
+                    // Use timezone-aware $dateToString so the date string matches the local day
+                    _id: { $dateToString: { format: "%Y-%m-%d", date: "$completedDate", timezone: USER_TIMEZONE } },
                     xp: { $sum: { $ifNull: ["$xpEarned", 10] } }
                 }
             }
         ]);
 
         const xpData = [];
-        // Architect the entire 7 day span dynamically whether empty mathematically or fully loaded!
+        // Build the entire 7-day span using local date strings
         for (let i = 0; i < 7; i++) {
             const d = new Date(startOfWeek);
             d.setDate(startOfWeek.getDate() + i);
-            const isoString = d.toISOString().split("T")[0];
+            // Format as YYYY-MM-DD in local timezone (matching what $dateToString with timezone produces)
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            const localDateStr = `${year}-${month}-${day}`;
 
-            const match = results.find(r => r._id === isoString);
+            const match = results.find(r => r._id === localDateStr);
             xpData.push({
-                date: isoString,
+                date: localDateStr,
                 xp: match ? match.xp : 0
             });
         }

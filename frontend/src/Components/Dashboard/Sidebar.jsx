@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaThLarge, FaTasks, FaChartBar, FaCog, FaSignOutAlt, FaCamera, FaTrash, FaExclamationTriangle } from "react-icons/fa";
+import { FaThLarge, FaTasks, FaChartBar, FaCog, FaSignOutAlt, FaCamera, FaTrash, FaExclamationTriangle, FaBars, FaTimes } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import Cropper from "react-easy-crop";
 import axios from "axios";
@@ -8,6 +8,7 @@ const Sidebar = ({ userName, setUserName, userPhoto, setUserPhoto, level, xp }) 
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   // Local state for edits in the settings modal until saved
   const [draftName, setDraftName] = useState(userName);
@@ -102,13 +103,54 @@ const Sidebar = ({ userName, setUserName, userPhoto, setUserPhoto, level, xp }) 
     }
   };
 
-  const confirmDeleteAccount = () => {
-    navigate("/login");
+  const confirmDeleteAccount = async () => {
+    // 1. Ask the user for explicit permission
+    const hasPermission = window.confirm("Are you absolutely sure you want to delete your account? All your data will be permanently removed.");
+
+    // 2. If they click "Cancel", stop the deletion process
+    if (!hasPermission) {
+      return;
+    }
+
+    // 3. If they click "OK", proceed with deletion
+    try {
+      const token = localStorage.getItem("token");
+
+      // Make API request to delete user data from DB
+      await axios.delete("http://localhost:5100/api/users/settings", {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      // Clear token from local storage and redirect
+      localStorage.removeItem("token");
+      navigate("/login");
+    } catch (err) {
+      console.error("Failed to delete account: ", err);
+    }
   };
+
+
 
   return (
     <>
-      <div className="w-64 bg-[#0B0F19] h-screen p-5 flex flex-col justify-between border-r border-[#1e293b] relative z-10">
+      {/* Mobile Hamburger Button */}
+      <button
+        onClick={() => setIsMobileOpen(!isMobileOpen)}
+        className="md:hidden fixed top-5 left-5 z-[70] p-2.5 bg-[#1A2035] rounded-xl text-white border border-[#2A344A] shadow-lg focus:outline-none"
+      >
+        {isMobileOpen ? <FaTimes className="text-xl text-red-400" /> : <FaBars className="text-xl text-[#818CF8]" />}
+      </button>
+
+      {/* Mobile Overlay */}
+      {isMobileOpen && (
+        <div
+          onClick={() => setIsMobileOpen(false)}
+          className="md:hidden fixed inset-0 bg-black/60 z-[60] backdrop-blur-sm transition-opacity"
+        />
+      )}
+
+      {/* Sidebar Container */}
+      <div className={`w-64 bg-[#0B0F19] h-screen p-5 flex flex-col justify-between border-r border-[#1e293b] fixed md:relative z-[65] transition-transform duration-300 ${isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}>
 
         {/* TOP SECTION */}
         <div>
@@ -135,32 +177,31 @@ const Sidebar = ({ userName, setUserName, userPhoto, setUserPhoto, level, xp }) 
 
             {/* Active / Optional Conditional Styling */}
             <li
-              onClick={() => navigate("/dashboard")}
+              onClick={() => { setIsMobileOpen(false); navigate("/dashboard"); }}
               className="flex items-center gap-4 bg-gradient-to-r from-[#202946] to-[#141A2E] text-white p-3 px-4 rounded-xl cursor-pointer border border-[#2A344A]"
             >
               <FaThLarge className="text-lg" /> DASHBOARD
             </li>
 
             <li
-              onClick={() => navigate("/habits")}
+              onClick={() => { setIsMobileOpen(false); navigate("/habits"); }}
               className="flex items-center gap-4 p-3 px-4 hover:bg-[#1A2035] hover:text-white rounded-xl cursor-pointer transition"
             >
               <FaTasks className="text-lg" /> HABITS
             </li>
 
             <li
-              onClick={() => navigate("/stats")}
+              onClick={() => { setIsMobileOpen(false); navigate("/stats"); }}
               className={`flex items-center gap-4 p-3 px-4 hover:bg-[#1A2035] hover:text-white rounded-xl cursor-pointer transition ${window.location.pathname === '/stats'
-                  ? 'bg-gradient-to-r from-[#202946] to-[#141A2E] text-white border border-[#2A344A]'
-                  : 'text-gray-400'
+                ? 'bg-gradient-to-r from-[#202946] to-[#141A2E] text-white border border-[#2A344A]'
+                : 'text-gray-400'
                 }`}
             >
               <FaChartBar className="text-lg" /> STATS
             </li>
 
-
             <li
-              onClick={handleOpenSettings}
+              onClick={() => { setIsMobileOpen(false); handleOpenSettings(); }}
               className="flex items-center gap-4 p-3 px-4 hover:bg-[#1A2035] hover:text-white rounded-xl cursor-pointer transition"
             >
               <FaCog className="text-lg" /> SETTINGS
